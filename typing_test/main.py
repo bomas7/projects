@@ -25,11 +25,13 @@ def game_loop():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == K_SPACE:
+                if event.key == pygame.K_SPACE:
                     user_input = ''
-                elif event.key == K_BACKSPACE:
+                elif event.key == pygame.K_BACKSPACE:
                     user_input = user_input[:-1]
                 elif event.unicode.isalpha() or event.unicode.isdigit():
+                    user_input += event.unicode
+                elif event.unicode == '.' or event.unicode == ',':
                     user_input += event.unicode
 
         user_line.update_text(user_input)
