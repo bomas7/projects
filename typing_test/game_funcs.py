@@ -5,22 +5,33 @@ from line import *
 
 
 def set_up(screen):
-    text = Paragraph()
+    paragraph = Paragraph()
 
     height = 50
     locations = calculate_locations(screen)
-    lines = tuple(Line(height) for i in range(4))
-    for line, location in zip(lines, locations[:-1]):
-        line.move(location)
+    text_boxes = tuple(TextBox(height) for i in range(4))
+    for text_box, location in zip(text_boxes, locations[:-1]):
+        text_box.move(location)
 
-    user_line = UserLine(height)
-    user_line.move(locations[-1])
-    user_line.color_swap()
+    user_box = UserBox(height)
+    user_box.move(locations[-1])
+    user_box.color_swap()
 
-    return text, lines, user_line
+    return paragraph, text_boxes, user_box
 
-def update_line_text(text, lines, current_line):
-    text_lines = text.lines[current_line:current_line + 4]
-    for i, j in zip(lines, text_lines):
+def calc_lines_left(paragraph, current_line):
+    return len(paragraph.lines) - current_line
+
+def is_end(paragraph, current_line):
+    lines_left = calc_lines_left(paragraph, current_line)
+    if lines_left == 0:
+        return True
+
+def update_text_boxes(paragraph, text_boxes, current_line):
+    lines_left = calc_lines_left(paragraph, current_line)
+    text_lines = paragraph.lines[current_line:current_line + lines_left]
+    while len(text_lines) < 4:
+        text_lines.append(None)
+
+    for i, j in zip(text_boxes, text_lines):
         i.update_text(j)
-    return lines
