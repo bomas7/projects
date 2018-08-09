@@ -10,6 +10,7 @@ screen = pygame.display.set_mode((1280, 720))
 
 def game_loop():
     paragraph, text_boxes, user_box = set_up(screen)
+    start = time.time()
 
     while True:
         screen.fill((0, 128, 0))
@@ -25,6 +26,10 @@ def game_loop():
 
             elif event.type == pygame.KEYDOWN:
                 user_box.evaluate_event(event, paragraph)
+
+        wpm = round(calculate_wpm(start, time.time(), paragraph.count))
+        time_elapsed = round(time.time() - start)
+        sidebar(wpm, time_elapsed, screen)
 
         user_box.update_text()
         user_box.draw(screen)

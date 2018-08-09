@@ -20,12 +20,15 @@ class Paragraph:
                 adder = i
         self.lines.append(adder)
 
+        self.count = 0
+
         #cur = current
         self.cur_line = 0
         self.cur_words = self.lines[self.cur_line].split(' ')
         self.cur_word = self.cur_words[0]
 
     def status_update(self):
+        self.count += len(self.cur_word) + 1
         if self.cur_words.index(self.cur_word) == len(self.cur_words) - 1:
             if self.cur_line + 1 == len(self.lines):
                 self.cur_line += 1

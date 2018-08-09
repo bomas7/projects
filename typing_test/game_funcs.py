@@ -35,3 +35,19 @@ def update_text_boxes(paragraph, text_boxes, current_line):
 
     for i, j in zip(text_boxes, text_lines):
         i.update_text(j)
+
+def calculate_wpm(start, now, count):
+    time = round(now - start) / 60
+    if count == 0:
+        return 0
+    return (count / 5) / time
+
+def sidebar(wpm, time_elapsed, screen):
+    font = pygame.font.SysFont('Arial', 20)
+    color = (255, 255, 255)
+
+    wpm_surf = font.render('Wpm: {}'.format(wpm), False, color)
+    time_surf = font.render('Time Passed: {}'.format(time_elapsed), False, color)
+
+    screen.blit(wpm_surf, (0, 0))
+    screen.blit(time_surf, (0, 30))
