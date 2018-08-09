@@ -51,3 +51,15 @@ def sidebar(wpm, time_elapsed, screen):
 
     screen.blit(wpm_surf, (0, 0))
     screen.blit(time_surf, (0, 30))
+
+def show_results(wpm, time_elapsed, screen):
+    wpm_font = pygame.font.SysFont('Arial', 50)
+    message_font = pygame.font.SysFont('Arial', 20)
+    color = (255, 255, 255)
+
+    wpm_surf = wpm_font.render('Your final wpm was {}.'.format(wpm), False, color)
+    wpm_rect = wpm_surf.get_rect(center=(640, 360))
+    message_surf = message_font.render('Press any key to continue.', False, color)
+    message_rect = message_surf.get_rect(center=(640, 560))
+    screen.blit(wpm_surf, wpm_rect)
+    screen.blit(message_surf, message_rect)
