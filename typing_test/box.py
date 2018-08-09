@@ -45,9 +45,11 @@ class UserBox(TextBox):
     def update_text(self):
         TextBox.update_text(self, text=self.input)
 
-    def box_color(self, word):
-        if self.input != word[:len(self.input)]:
+    def box_color(self, paragraph):
+        word_compare = paragraph.cur_word[:len(self.input)]
+        if self.input != word_compare or len(self.input) > len(paragraph.cur_word):
             self.rect_color = (255, 0 ,0)
+            paragraph.errors += 1
         else:
             self.rect_color = (255, 255, 255)
 
@@ -66,4 +68,4 @@ class UserBox(TextBox):
         elif event.unicode == '.' or event.unicode == ',':
             self.input += event.unicode
 
-        self.box_color(paragraph.cur_word)
+        self.box_color(paragraph)

@@ -2,7 +2,10 @@
 
 from paragraph import *
 from box import *
+import time
+import pygame
 
+#General
 
 def set_up(screen):
     paragraph = Paragraph()
@@ -18,8 +21,35 @@ def set_up(screen):
 
     return paragraph, text_boxes, user_box
 
-def calc_lines_left(paragraph, current_line):
-    return len(paragraph.lines) - current_line
+def draw_group(group, screen):
+    for i in group:
+        i.draw(screen)
+
+def is_end(paragraph, current_line):
+    lines_left = len(paragraph.lines) - current_line
+    if lines_left == 0:
+        return True
+
+def update_text_boxes(paragraph, text_boxes, current_line):
+    lines_left = len(paragraph.lines) - current_line
+    text_lines = paragraph.lines[current_line:current_line + lines_left]
+    while len(text_lines) < 4:
+        text_lines.append(None)
+
+    for i, j in zip(text_boxes, text_lines):
+        i.update_text(j)
+
+def wait():
+    while True:
+        time.sleep(1)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            elif event.type == pygame.KEYDOWN:
+                return
+
+#Calculations
 
 def calculate_locations(screen):
     h = screen.get_height()
@@ -28,50 +58,54 @@ def calculate_locations(screen):
         locations.append((screen.get_width() // 2, i * h // 7))
     return locations
 
-def draw_group(group, screen):
-    for i in group:
-        i.draw(screen)
-
-def is_end(paragraph, current_line):
-    lines_left = calc_lines_left(paragraph, current_line)
-    if lines_left == 0:
-        return True
-
-def update_text_boxes(paragraph, text_boxes, current_line):
-    lines_left = calc_lines_left(paragraph, current_line)
-    text_lines = paragraph.lines[current_line:current_line + lines_left]
-    while len(text_lines) < 4:
-        text_lines.append(None)
-
-    for i, j in zip(text_boxes, text_lines):
-        i.update_text(j)
-
 def calculate_wpm(start, now, count):
-    time = round(now - start) / 60
     if count == 0:
         return 0
+    time = round(now - start) / 60
     return (count / 5) / time
 
-def sidebar(wpm, time_elapsed, screen):
-    font = pygame.font.SysFont('Arial', 20)
-    color = (255, 255, 255)
+def calculate_accuracy(paragraph):
+    print(paragraph.errors, paragraph.count)
+    if paragraph.errors == 0 and paragraph.count > 0:
+        return 100
+    elif paragraph.count == 0:
+        return 0
+    else:
+        return (paragraph.count - paragraph.errors) / paragraph.count * 100
 
-    wpm_surf = font.render('Wpm: {}'.format(wpm), False, color)
-    time_surf = font.render('Time Passed: {}'.format(time_elapsed), False, color)
+#Text Display
 
-    screen.blit(wpm_surf, (0, 0))
-    screen.blit(time_surf, (0, 30))
+def make_text(text, location, size, screen, color=(255, 255, 255), style=False):
+    font = pygame.font.SysFont('Arial', size)
+    text_surf = font.render(text, False, color)
+    if style == True:
+        location = text_surf.get_rect(center=location)
+    screen.blit(text_surf, location)
 
-def show_results(wpm, time_elapsed, screen):
-    wpm_font = pygame.font.SysFont('Arial', 50)
-    message_font = pygame.font.SysFont('Arial', 20)
-    color = (255, 255, 255)
+def make_batch(texts, locations, size, screen, color=(255, 255, 255), style=False):
+    for i, j in zip(texts, locations):
+        make_text(i, j, size, screen, color, style)
 
-    wpm_surf = wpm_font.render('Your final wpm was {}.'.format(wpm), False, color)
-    wpm_rect = wpm_surf.get_rect(center=(640, 360))
+def sidebar(wpm, accuracy, time_elapsed, screen):
+    texts = [
+        'Wpm: {}'.format(wpm),
+        'Accuracy: {}'.format(accuracy),
+        'Time Elapsed: {}'.format(time_elapsed)
+    ]
 
-    message_surf = message_font.render('Press any key to continue.', False, color)
-    message_rect = message_surf.get_rect(center=(640, 560))
+    locations = [(0, 0), (0, 30), (0, 60)]
+    make_batch(texts, locations, 20, screen)
 
-    screen.blit(wpm_surf, wpm_rect)
-    screen.blit(message_surf, message_rect)
+def show_results(wpm, accuracy, time_elapsed, screen):
+    texts = [
+        'Your wpm was: {}'.format(wpm),
+        'Your accuracy was {}%'.format(accuracy),
+        'Total time: {} seconds'.format(time_elapsed)
+    ]
+
+    locations = [(640, 250), (640, 310), (640, 370)]
+    make_batch(texts, locations, 35, screen, style=True)
+
+    message = 'Press any key to continue'
+    message_location = (640, 600)
+    make_text(message, message_location, 20, screen, style=True)

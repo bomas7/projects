@@ -21,6 +21,7 @@ class Paragraph:
         self.lines.append(adder)
 
         self.count = 0
+        self.errors = 0
 
         #cur = current
         self.cur_line = 0

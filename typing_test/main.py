@@ -9,15 +9,6 @@ import time
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 
-def wait():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
-            elif event.type == pygame.KEYDOWN:
-                return
-
 def game_loop():
     paragraph, text_boxes, user_box = set_up(screen)
     start = time.time()
@@ -27,9 +18,10 @@ def game_loop():
 
         wpm = round(calculate_wpm(start, time.time(), paragraph.count))
         time_elapsed = round(time.time() - start)
+        accuracy = round(calculate_accuracy(paragraph))
 
         if is_end(paragraph, paragraph.cur_line):
-            show_results(wpm, time_elapsed, screen)
+            show_results(wpm, accuracy, time_elapsed, screen)
             pygame.display.update()
             wait()
             return
@@ -44,7 +36,7 @@ def game_loop():
             elif event.type == pygame.KEYDOWN:
                 user_box.evaluate_event(event, paragraph)
 
-        sidebar(wpm, time_elapsed, screen)
+        sidebar(wpm, accuracy, time_elapsed, screen)
 
         user_box.update_text()
         user_box.draw(screen)
