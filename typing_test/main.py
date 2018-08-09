@@ -1,6 +1,7 @@
 #Typing Tester
 
 from game_funcs import *
+from box import *
 import pygame
 import time
 

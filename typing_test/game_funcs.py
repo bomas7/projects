@@ -1,7 +1,7 @@
 #Game functions for typing_test
 
 from paragraph import *
-from line import *
+from box import *
 
 
 def set_up(screen):
@@ -15,12 +15,22 @@ def set_up(screen):
 
     user_box = UserBox(height)
     user_box.move(locations[-1])
-    user_box.color_swap()
 
     return paragraph, text_boxes, user_box
 
 def calc_lines_left(paragraph, current_line):
     return len(paragraph.lines) - current_line
+
+def calculate_locations(screen):
+    h = screen.get_height()
+    locations = []
+    for i in range(1, 6):
+        locations.append((screen.get_width() // 2, i * h // 7))
+    return locations
+
+def draw_group(group, screen):
+    for i in group:
+        i.draw(screen)
 
 def is_end(paragraph, current_line):
     lines_left = calc_lines_left(paragraph, current_line)
@@ -59,7 +69,9 @@ def show_results(wpm, time_elapsed, screen):
 
     wpm_surf = wpm_font.render('Your final wpm was {}.'.format(wpm), False, color)
     wpm_rect = wpm_surf.get_rect(center=(640, 360))
+
     message_surf = message_font.render('Press any key to continue.', False, color)
     message_rect = message_surf.get_rect(center=(640, 560))
+
     screen.blit(wpm_surf, wpm_rect)
     screen.blit(message_surf, message_rect)

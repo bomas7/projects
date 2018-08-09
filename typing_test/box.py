@@ -39,13 +39,17 @@ class UserBox(TextBox):
 
     def __init__(self, height, color=(255, 255, 255)):
         TextBox.__init__(self, height, color)
-        self.input = ''
-
-    def color_swap(self):
         self.text_color, self.rect_color = self.rect_color, self.text_color
+        self.input = ''
 
     def update_text(self):
         TextBox.update_text(self, text=self.input)
+
+    def box_color(self, word):
+        if self.input != word[:len(self.input)]:
+            self.rect_color = (255, 0 ,0)
+        else:
+            self.rect_color = (255, 255, 255)
 
     def evaluate_event(self, event, paragraph):
         if event.key == pygame.K_SPACE:
@@ -62,13 +66,4 @@ class UserBox(TextBox):
         elif event.unicode == '.' or event.unicode == ',':
             self.input += event.unicode
 
-def calculate_locations(screen):
-    h = screen.get_height()
-    locations = []
-    for i in range(1, 6):
-        locations.append((screen.get_width() // 2, i * h // 7))
-    return locations
-
-def draw_group(group, screen):
-    for i in group:
-        i.draw(screen)
+        self.box_color(paragraph.cur_word)
