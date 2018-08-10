@@ -39,9 +39,9 @@ def update_text_boxes(paragraph, text_boxes, current_line):
     for i, j in zip(text_boxes, text_lines):
         i.update_text(j)
 
-def wait():
+def wait(delay=0):
     while True:
-        time.sleep(1)
+        time.sleep(delay)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -49,6 +49,13 @@ def wait():
             elif event.type == pygame.KEYDOWN:
                 return
 
+def countdown(screen):
+    for i in (3, 2, 1):
+        screen.fill((0, 128, 0))
+        make_text(str(i), (640, 360), 50, screen, style=True)
+        pygame.display.update()
+        time.sleep(1)
+        
 #Calculations
 
 def calculate_locations(screen):
@@ -65,7 +72,6 @@ def calculate_wpm(start, now, count):
     return (count / 5) / time
 
 def calculate_accuracy(paragraph):
-    print(paragraph.errors, paragraph.count)
     if paragraph.errors == 0 and paragraph.count > 0:
         return 100
     elif paragraph.count == 0:
@@ -90,10 +96,11 @@ def sidebar(wpm, accuracy, time_elapsed, screen):
     texts = [
         'Wpm: {}'.format(wpm),
         'Accuracy: {}'.format(accuracy),
-        'Time Elapsed: {}'.format(time_elapsed)
+        #'Time Elapsed: {}'.format(time_elapsed)
     ]
 
-    locations = [(0, 0), (0, 30), (0, 60)]
+    #locations = [(0, 0), (0, 30), (0, 60)]
+    locations = [(0, 0), (0, 30)]
     make_batch(texts, locations, 20, screen)
 
 def show_results(wpm, accuracy, time_elapsed, screen):

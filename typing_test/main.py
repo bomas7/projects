@@ -9,6 +9,34 @@ import time
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 
+def directions():
+    pass
+
+def menu():
+    title = 'Typing Test'
+    author = 'by: Manny Wang'
+    message = 'Press the s key to start.'
+
+    screen.fill((0, 128, 0))
+    make_text(title, (640, 230), 75, screen, style=True)
+    make_text(author, (640, 350), 30, screen, style=True)
+    make_text(message, (640, 620), 20, screen, style=True)
+
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            elif event.type == pygame.KEYDOWN:
+                if event.unicode.lower() == 's':
+                    countdown(screen)
+                    return
+                elif event.unicode.lower() == 'd':
+                    directions()
+
+
 def game_loop():
     paragraph, text_boxes, user_box = set_up(screen)
     start = time.time()
@@ -23,7 +51,7 @@ def game_loop():
         if is_end(paragraph, paragraph.cur_line):
             show_results(wpm, accuracy, time_elapsed, screen)
             pygame.display.update()
-            wait()
+            wait(1)
             return
 
         update_text_boxes(paragraph, text_boxes, paragraph.cur_line)
@@ -34,6 +62,8 @@ def game_loop():
                 pygame.quit()
 
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
                 user_box.evaluate_event(event, paragraph)
 
         sidebar(wpm, accuracy, time_elapsed, screen)
@@ -46,7 +76,9 @@ def game_loop():
 
 
 def main():
-    game_loop()
+    while True:
+        menu()
+        game_loop()
 
 if __name__ == '__main__':
     main()
