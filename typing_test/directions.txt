@@ -1,0 +1,12 @@
+Welcome to Manny's Typing Test!
+
+Use this typing test to see your wpm (words per minute) or to practice typing.
+
+Before the typing test begins there will be a 3 second countdown. Once the typing test
+begins you will be given a randomly generated paragraph that you must type. Once
+the test ends you shown your results (your wpm, accuracy, and time spent typing).
+
+In order to start the typing test, you must exit to the menu and press the s key.
+In order to return to the menu (from the typing test) you must press the ESC (escape) key.
+
+Press ESC to return to the menu.

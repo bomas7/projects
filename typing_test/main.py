@@ -2,6 +2,7 @@
 
 from game_funcs import *
 from box import *
+from paragraph import *
 import pygame
 import time
 
@@ -10,12 +11,29 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 
 def directions():
-    pass
+    with open('directions.txt') as f:
+        text = [i.strip() for i in f.readlines()]
+
+    screen.fill((0, 128, 0))
+    for i in text:
+        location = (40, (text.index(i) + 1) * 35)
+        make_text(i, location, 30, screen)
+
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return
 
 def menu():
     title = 'Typing Test'
     author = 'by: Manny Wang'
-    message = 'Press the s key to start.'
+    message = 'Press the s key to start.  '
+    message += 'Press the d key for directions.'
 
     screen.fill((0, 128, 0))
     make_text(title, (640, 230), 75, screen, style=True)
@@ -32,9 +50,9 @@ def menu():
             elif event.type == pygame.KEYDOWN:
                 if event.unicode.lower() == 's':
                     countdown(screen)
-                    return
+                    return 's'
                 elif event.unicode.lower() == 'd':
-                    directions()
+                    return 'd'
 
 
 def game_loop():
@@ -73,12 +91,13 @@ def game_loop():
 
         pygame.display.update()
 
-
-
 def main():
     while True:
-        menu()
-        game_loop()
+        next = menu()
+        if next == 's':
+            game_loop()
+        elif next == 'd':
+            directions()
 
 if __name__ == '__main__':
     main()
